@@ -4,4 +4,5 @@ matplotlib
 dill
 scikit-learn
 seaborn
+dash
 -e .

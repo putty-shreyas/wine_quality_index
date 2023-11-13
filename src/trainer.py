@@ -12,13 +12,23 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 
-from src.utils import save_model
+from src.utils import save_obj
 
 # Importing the dataset
 dataset = pd.read_csv(os.path.join("artifacts", "winequality.txt"), sep=";")
-
+"""
 # Null values check
 #print(dataset.isnull().sum())
+
+#Check min and max values for all columns
+range_dict = {}
+for i in dataset.columns:
+    max = dataset[i].max()
+    min = dataset[i].min()
+    range_dict[f"{i}_max"] = max
+    range_dict[f"{i}_min"] = min
+print(range_dict)
+"""
 
 # Dataset Splitting 
 X = dataset.drop("quality", axis = 1)
@@ -45,22 +55,6 @@ regressor.fit(X_train_scaled, y_train)
 # Predicting the Test set results
 y_pred = regressor.predict(X_test_scaled)
 
-'''
-# Visualising the results
-plt.scatter(X_test_scaled, y_test.reshape(X_test_scaled.shape), color='black', label='Actual')
-plt.plot(X_test_scaled, y_pred, color='blue', linewidth=3, label='Regression Line')
-plt.xlabel('X')
-plt.ylabel('y')
-plt.title('Regression Results')
-plt.legend()
-plt.show()
-
-#plt.figure(figsize=(10,8))
-#plt.plot(y_pred, color ='red')
-#plt.plot(y_test, color = 'blue')
-#plt.title('Quality (Predicted)')
-#plt.savefig(os.path.join("artifacts", "results.png"), dpi = 200)
-'''
 # Check Model performance
 
 # (MSE)
@@ -73,5 +67,6 @@ print("RMSE = ",np.sqrt(mean_squared_error(y_test,y_pred)))
 r2 = r2_score(y_test,y_pred)
 print("R2 = ", r2)
 
-# Saving Model
-save_model(os.path.join("results", "model.pkl"), regressor)
+# Saving Objects
+save_obj(os.path.join("results", "model.pkl"), regressor)
+save_obj(os.path.join("results", "preprocessor.pkl"), MMS)
