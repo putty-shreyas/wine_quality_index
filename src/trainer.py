@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 
+from src.utils import save_model
+
 # Importing the dataset
 dataset = pd.read_csv(os.path.join("artifacts", "winequality.txt"), sep=";")
 
@@ -21,14 +23,14 @@ dataset = pd.read_csv(os.path.join("artifacts", "winequality.txt"), sep=";")
 # Dataset Splitting 
 X = dataset.drop("quality", axis = 1)
 y = dataset["quality"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.4, random_state = 42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
 
 # Feature Selection (Pearson Correlation)
 plt.figure(figsize=(12,10))
 X_corr = X_train.corr()
 sns.heatmap(X_corr, cmap = "Blues", annot=True)
 plt.title('Pearson Correlation of Features')
-plt.savefig(os.path.join("artifacts", "corr_matrix.png"), dpi = 200)
+plt.savefig(os.path.join("results", "corr_matrix.png"), dpi = 200)
 plt.close()
 
 # Feature Scaling
@@ -70,3 +72,6 @@ print("RMSE = ",np.sqrt(mean_squared_error(y_test,y_pred)))
 # Checking Model performance (R2)
 r2 = r2_score(y_test,y_pred)
 print("R2 = ", r2)
+
+# Saving Model
+save_model(os.path.join("results", "model.pkl"), regressor)
